@@ -1,47 +1,47 @@
-name: Make TWRP Device
+名字: 制造TWRP装置
 
-on:
+在:
   workflow_dispatch:
-    inputs:
+输入:
       IMG_URL:    
-        description: 'IMG_URL'
-        required: true
-        default: ''
+描述: 'IMG_URL'
+所需: 真正的
+默认的: ''
 
-jobs:
-  build:
-    if: github.event.repository.owner.id == github.event.sender.id
-    runs-on: ubuntu-18.04
+工作:
+建筑:
+如果: id = = github．event．repository．owner．id
+    runs-on: ubuntu-20.04
     
-    steps:
-    - name: Check Out
-      uses: actions/checkout@main
+步骤:
+    - 名字: 退房
+用途: actions/checkout@main
       
-    - name: Prepare the environment
-      run: |
-        sudo apt update
-        sudo apt -y install python python3 python-pip python3-pip cpio wget
-        pip3 install twrpdtgen
-        mkdir dt
+    - 名字: 营造环境
+跑: |
+sudo apt更新
+sudo apt -y install python python3 python-pip python3-pip cpio wget
+安装twrpdtgen
+mkdir dt
       
-    - name: Download boot or recovery img
-      run: |
-        aria2c "${{ github.event.inputs.IMG_URL }}"
-        ls
+    - 名字: 下载引导或恢复
+跑: |
+aria2c "${{ github.event.inputs.IMG_URL }}"
+l š
       
-    - name: Start build
-      run: |
-        python3 -m twrpdtgen -o dt/ *.img
-    - name: ZIP device tree
-      run: |
-        zip -r DeviceTree.zip ./dt
-    - name: Upload to Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
+    - 名字: 开始建造
+跑: |
+python3 -m twrpdtgen -o dt/ *.img
+    - 名字: ZIP设备树
+跑: |
+zip -r DeviceTree.zip ./dt
+    - 名字: 上载至发布
+用途: softprops/action-gh-release@v1
+与:
+档案: |
           ./DeviceTree.zip
-        name: TWRP_Device_Tree-${{ github.run_id }}
+名字: TWRP_Device_Tree-${{ github.run_id }}
         tag_name: ${{ github.run_id }}
-        body: DeviceTree for twrp
-      env:
+身体: twrp设备
+Ê v:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
